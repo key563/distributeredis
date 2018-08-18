@@ -2,6 +2,7 @@ package com.key.distributeredis.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -9,6 +10,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import javax.annotation.Resource;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -26,6 +29,7 @@ public class RedisConfig {
      * @return
      */
     @Bean(name = "redisTemplate")
+    @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<String, Object> functionDomainRedisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         initDomainRedisTemplate(redisTemplate, redisConnectionFactory,false);
@@ -57,7 +61,7 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setConnectionFactory(factory);
-        //设置 事务 支持
+        //设置 是否支持 事务
         redisTemplate.setEnableTransactionSupport(enableTransactionSupport);
     }
 
@@ -122,10 +126,9 @@ public class RedisConfig {
 //     *
 //     */
 //    @Bean(name = "redisUtils")
-//    @Resource(name = "redisTemplate")
 //    public RedisUtils redisUtil(RedisTemplate<String, Object> redisTemplate) {
 //        RedisUtils redisUtil = new RedisUtils();
-//        redisUtil.setRedisTemplate(redisTemplate);
+////        redisUtil.setRedisTemplate(redisTemplate);
 //        return redisUtil;
 //    }
 }

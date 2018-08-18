@@ -14,7 +14,10 @@ import javax.annotation.Resource;
 public class DDController {
 
     @Resource(name = "transactionalRedisTemplate")
-    private RedisTemplate redisTemplate1;
+    private RedisTemplate transactionalRedisTemplate;
+
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Autowired
     private HashOperations<String, String, Object> hashOperations;
@@ -27,9 +30,7 @@ public class DDController {
 
     @RequestMapping("/getDemo")
     public String getDemo(String key){
-//        WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-//        RedisUtils redisUtils1 = context.getBean(RedisUtils.class);
-
+        redisTemplate.opsForValue().set("test","test");
         return "Yes";
     }
 }
