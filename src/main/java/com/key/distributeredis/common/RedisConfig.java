@@ -2,6 +2,7 @@ package com.key.distributeredis.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -26,6 +27,7 @@ public class RedisConfig {
      * @return
      */
     @Bean(name = "redisTemplate")
+    @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<String, Object> functionDomainRedisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         initDomainRedisTemplate(redisTemplate, redisConnectionFactory,false);
@@ -57,7 +59,7 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setConnectionFactory(factory);
-        //设置 事务 支持
+        //设置 是否支持 事务
         redisTemplate.setEnableTransactionSupport(enableTransactionSupport);
     }
 
