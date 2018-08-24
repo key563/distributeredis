@@ -11,8 +11,6 @@ import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.annotation.Resource;
-
 @Configuration
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
@@ -25,7 +23,7 @@ public class RedisConfig {
 
     /**
      * 实例化 RedisTemplate 对象
-     *
+     *  默认依赖对象（ConditionalOnMissingBean注解）
      * @return
      */
     @Bean(name = "redisTemplate")
@@ -64,7 +62,6 @@ public class RedisConfig {
         //设置 是否支持 事务
         redisTemplate.setEnableTransactionSupport(enableTransactionSupport);
     }
-
 
     /**
      * 实例化 HashOperations 对象,可以使用 Hash 类型操作
