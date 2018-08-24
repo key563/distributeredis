@@ -1,4 +1,4 @@
-package com.key.distributeredis.common;
+package com.key.distributeredis.common.redis;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
