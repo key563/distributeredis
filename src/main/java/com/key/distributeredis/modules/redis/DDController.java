@@ -30,7 +30,7 @@ public class DDController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @RequestMapping(value = "/getDemo/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getDemo/{id}")
     public String getDemo(String key, @PathVariable(name = "id") String id) {
         redisTemplate.opsForValue().set("test", "test");
         return "Yes";
