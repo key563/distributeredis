@@ -1,5 +1,9 @@
 package com.key.distributeredis.common.http;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +62,7 @@ public class HttpClientDemo {
         httpClient.addQueryParam("page", "1");
 //        httpClient.queryParams();
         // 添加表单参数，postParams
-        httpClient.addPostParam("name","zhangsan");
+        httpClient.addPostParam("name", "zhangsan");
 //        httpClient.postParams(new HashMap<>());
 
         // 添加请求体 body
@@ -69,10 +73,13 @@ public class HttpClientDemo {
         // 发送请求并返回响应结果
         RestfulHttpClient.HttpResponse response = httpClient.request();
         // 根据状态码判断请求是否成功
-        if(response.getCode() == 200){
+        if (response.getCode() == 200) {
             // 获取响应内容
             String content = response.getContent();
         }
+
+        //
+
 
         //发送get请求获取数据
         try {
@@ -102,5 +109,26 @@ public class HttpClientDemo {
         }
     }
 
+    public void trustManager() throws Exception {
+        // 创建SSLContext对象，并使用我们指定的信任管理器初始化
+        TrustManager[] tm = {new MyX509TrustManager()};
+        SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+        sslContext.init(null, tm, new java.security.SecureRandom());
+        // 从上述SSLContext对象中得到SSLSocketFactory对象
+        SSLSocketFactory ssf = sslContext.getSocketFactory();
+        // 创建URL对象
+        URL myURL = new URL("https://ebanks.gdb.com.cn/sperbank/perbankLogin.jsp");
+        // 创建HttpsURLConnection对象，并设置其SSLSocketFactory对象
+        HttpsURLConnection httpsConn = (HttpsURLConnection) myURL.openConnection();
+        httpsConn.setSSLSocketFactory(ssf);
+        // 取得该连接的输入流，以读取响应内容
+        InputStreamReader insr = new InputStreamReader(httpsConn.getInputStream());
+        // 读取服务器的响应内容并显示
+        int respInt = insr.read();
+        while (respInt != -1) {
+            System.out.print((char) respInt);
+            respInt = insr.read();
+        }
+    }
 
 }

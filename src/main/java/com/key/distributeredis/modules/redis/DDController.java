@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,9 +29,13 @@ public class DDController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @RequestMapping(value = "/getDemo/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getDemo/{id}")
     public String getDemo(String key, @PathVariable(name = "id") String id) {
         redisTemplate.opsForValue().set("test", "test");
-        return "Yes";
+        String result = "";
+        Boolean flag = redisUtils.setNx("setNxTest", id);
+        System.out.println(flag);
+        result = flag.toString();
+        return result;
     }
 }

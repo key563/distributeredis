@@ -1,5 +1,6 @@
 package com.key.distributeredis.common.redis;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -7,7 +8,6 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -184,6 +184,38 @@ public class RedisUtils {
     }
 
     /**
+     * 普通缓存放入，并返回原value
+     *
+     * @param key   键
+     * @param value 值
+     * @return true成功 false失败
+     */
+    public Object getSet(String key, Object value) {
+        try {
+            return redisTemplate.opsForValue().getAndSet(key, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 普通缓存放入判断key是否存在，如果key不存在则添加并返回true，如果key存在则直接返回false
+     *
+     * @param key   键
+     * @param value 值
+     * @return true成功 false失败
+     */
+    public boolean setNx(String key, Object value) {
+        try {
+            return redisTemplate.opsForValue().setIfAbsent(key, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 递增
      *
      * @param key 键
@@ -209,6 +241,31 @@ public class RedisUtils {
             throw new RuntimeException("递减因子必须大于0");
         }
         return redisTemplate.opsForValue().increment(key, -delta);
+    }
+
+
+    /**
+     * 分布式应用：获取锁
+     * @param key
+     * @param value
+     * @return  true：获取锁成功，false：获取锁失败（等待锁）
+     */
+    public Boolean lock(String key,String value){
+
+        if(redisTemplate.opsForValue().setIfAbsent(key,value)){
+            return true;
+        }
+        String redisValue = (String) redisTemplate.opsForValue().get(key);
+        if(StringUtils.isNotBlank(redisValue) && Long.valueOf(redisValue) < System.currentTimeMillis()){
+            //锁过期
+            String oldValue = (String) redisTemplate.opsForValue().getAndSet(key, value);
+            //防止多线程同时获取锁
+            if(StringUtils.isNotBlank(oldValue) && oldValue.equals(redisValue)){
+                return true;
+            }
+        }
+        // 等待锁
+        return false;
     }
 
 // ================================ Map =================================

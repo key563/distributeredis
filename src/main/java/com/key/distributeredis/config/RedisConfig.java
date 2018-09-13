@@ -1,4 +1,4 @@
-package com.key.distributeredis.common.redis;
+package com.key.distributeredis.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +11,9 @@ import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * Redis 配置类
+ */
 @Configuration
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
