@@ -1,6 +1,8 @@
 package com.key.modules.redis;
 
 import com.key.common.redis.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +16,7 @@ import javax.annotation.Resource;
 @RestController
 public class DDController {
 
+    private final Logger logger = LoggerFactory.getLogger(DDController.class);
     @Resource(name = "transactionalRedisTemplate")
     private RedisTemplate transactionalRedisTemplate;
 
@@ -38,4 +41,19 @@ public class DDController {
         result = flag.toString();
         return result;
     }
+
+    @RequestMapping(value = "/log")
+    public void logTest() {
+        String name = "阿萨德科技和";
+        int age = 32;
+        logger.trace(name);
+        logger.debug(name);
+        logger.info(name);
+        logger.warn(name);
+        logger.error(name);
+
+        logger.info("name:" + name + " , age:" + age);
+        logger.info("name:{} , age:{}", name, age);
+    }
+
 }
