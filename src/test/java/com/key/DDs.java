@@ -1,4 +1,4 @@
-package com.key.distributeredis;
+package com.key;
 
 public class DDs {
     private String name;

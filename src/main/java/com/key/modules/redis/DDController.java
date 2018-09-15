@@ -1,6 +1,6 @@
-package com.key.distributeredis.modules.redis;
+package com.key.modules.redis;
 
-import com.key.distributeredis.common.redis.RedisUtils;
+import com.key.common.redis.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -1,4 +1,4 @@
-package com.key.distributeredis.common.http;
+package com.key.common.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;

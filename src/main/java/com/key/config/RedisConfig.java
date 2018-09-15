@@ -1,4 +1,4 @@
-package com.key.distributeredis.config;
+package com.key.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

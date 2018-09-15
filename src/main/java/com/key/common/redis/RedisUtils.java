@@ -1,4 +1,4 @@
-package com.key.distributeredis.common.redis;
+package com.key.common.redis;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;

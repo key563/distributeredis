@@ -1,4 +1,4 @@
-package com.key.distributeredis;
+package com.key;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

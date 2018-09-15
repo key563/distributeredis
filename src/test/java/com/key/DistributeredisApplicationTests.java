@@ -1,4 +1,4 @@
-package com.key.distributeredis;
+package com.key;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

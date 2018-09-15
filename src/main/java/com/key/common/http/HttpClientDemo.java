@@ -1,4 +1,4 @@
-package com.key.distributeredis.common.http;
+package com.key.common.http;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
