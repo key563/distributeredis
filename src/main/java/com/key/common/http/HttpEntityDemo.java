@@ -56,7 +56,7 @@ public class HttpEntityDemo {
         String params = "";
 
         // 1.参数为json格式字符串{"name":"zhangsan","value":"asdasd"}格式
-        // Header需要设置：ContentType=ContentType.APPLICATION_JSON
+        // Header需要设置：Content-Type=ContentType.APPLICATION_JSON
         Map<String, String> map = new HashMap<>();
         map.put("name", "zhangsan");
         map.put("age", 11 + "");
@@ -64,7 +64,7 @@ public class HttpEntityDemo {
         map.put("char", "asda");
         JSONObject jsonObject = new JSONObject(map);
         params = jsonObject.toString();
-        System.out.println("json格式参数:"+params);
+        System.out.println("json格式参数:" + params);
         StringEntity entity1 = new StringEntity(params, "UTF-8");
 
         // 可以用此方法将对象快速转为json格式字符串
@@ -78,17 +78,17 @@ public class HttpEntityDemo {
 
 
         // 2.参数为urlparam格式字符串,name=zhangsan&value=asdasd格式
-        // Header需要设置：ContentType=ContentType.APPLICATION_FORM_URLENCODED/MULTIPART_FORM_DATA
+        // Header需要设置：Content-Type=ContentType.APPLICATION_FORM_URLENCODED/MULTIPART_FORM_DATA
         params = toUrlParams(map);
-        System.out.println("url格式参数:"+params);
+        System.out.println("url格式参数:" + params);
         // 创建带字符创参数和字符编码的
         StringEntity entity = new StringEntity(params, "UTF-8");
 
 
         // 3.参数为xml字符串,
-        // Header需要设置：ContentType=ContentType.TEXT_XML
-        params = getXMLString("2018-09-01","2018-09-30","test");
-        System.out.println("xml格式参数:"+params);
+        // Header需要设置：Content-Type=ContentType.TEXT_XML
+        params = getXMLString("2018-09-01", "2018-09-30", "test");
+        System.out.println("xml格式参数:" + params);
         StringEntity entity2 = new StringEntity(params, "UTF-8");
     }
 
@@ -97,11 +97,11 @@ public class HttpEntityDemo {
      */
     public void urlEncodedEntity() throws UnsupportedEncodingException {
         // 类form表单方式提交表单参数
-        // Header需要设置：ContentType=ContentType.APPLICATION_FORM_URLENCODED
+        // Header需要设置：Content-Type=ContentType.APPLICATION_FORM_URLENCODED
         List<NameValuePair> pairList = new ArrayList<NameValuePair>();
-        BasicNameValuePair name = new BasicNameValuePair("name","zhangsan");
-        BasicNameValuePair value = new BasicNameValuePair("value","asda");
-        BasicNameValuePair gender = new BasicNameValuePair("gender","male");
+        BasicNameValuePair name = new BasicNameValuePair("name", "zhangsan");
+        BasicNameValuePair value = new BasicNameValuePair("value", "asda");
+        BasicNameValuePair gender = new BasicNameValuePair("gender", "male");
         pairList.add(name);
         pairList.add(value);
         pairList.add(gender);
@@ -115,17 +115,18 @@ public class HttpEntityDemo {
     public void multipartEntityBuilder() throws FileNotFoundException {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        builder.addTextBody("name","zhansgan");
-        builder.addTextBody("value","asdasd");
+        builder.addTextBody("name", "zhansgan");
+        builder.addTextBody("value", "asdasd");
         // 添加二进制流
-        builder.addBinaryBody("file",new FileInputStream(""),ContentType.MULTIPART_FORM_DATA, "image.jpeg");
+        builder.addBinaryBody("file", new FileInputStream(""), ContentType.MULTIPART_FORM_DATA, "image.jpeg");
         // 通过multipart方式添加文件
         File uploadFile = new File("");
-        builder.addPart("file2",new FileBody(uploadFile,ContentType.create("image/jpeg"), uploadFile.getName()));
+        builder.addPart("file2", new FileBody(uploadFile, ContentType.create("image/jpeg"), uploadFile.getName()));
         HttpEntity entity = builder.build();
     }
 
-    /**s
+    /**
+     * s
      * 构造xml，并转为字符串
      *
      * @param startTime
@@ -158,14 +159,15 @@ public class HttpEntityDemo {
 
     /**
      * 将map数据转为url参数形式，如name=a&value=b
-     * @param paras
+     *
+     * @param params
      * @return
      */
-    public static String toUrlParams(Map<String, String> paras) {
-        if (paras != null && !paras.isEmpty()) {
+    public static String toUrlParams(Map<String, String> params) {
+        if (params != null && !params.isEmpty()) {
             StringBuffer urlParams = new StringBuffer();
-            for (String k : paras.keySet()) {
-                urlParams.append(k + "=" + paras.get(k) + "&");
+            for (String k : params.keySet()) {
+                urlParams.append(k + "=" + params.get(k) + "&");
             }
             if (urlParams.length() > 0) {
                 return urlParams.substring(0, urlParams.length() - 1);

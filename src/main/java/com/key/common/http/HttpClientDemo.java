@@ -1,9 +1,5 @@
 package com.key.common.http;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +7,108 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * HttpClient 请求调用demo
  */
 public class HttpClientDemo {
+    public static void main(String[] args) {
+        int nn = 16;
+        int MAXIMUM_CAPACITY = 1 << 30;
+        int n = 16 - 1;
+        System.out.println(n);
+        n |= n >>> 1;
+        System.out.println(n);
+        n |= n >>> 2;
+        System.out.println(n);
+        n |= n >>> 4;
+        System.out.println(n);
+        n |= n >>> 8;
+        System.out.println(n);
+        n |= n >>> 16;
+        System.out.println(n);
+        int m = (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+        System.out.println(m);
+        HttpClientDemo test = new HttpClientDemo();
+//        test.hashMapTest();
+    }
+
+    public void hashMapTest() {
+        HashMap<Integer, Object> map = new HashMap<>(18);
+        for (int i = 100; i < 117; i++) {
+            map.put(i, "test_" + i);
+        }
+        System.out.println(map);
+        keySetKey(map);
+        keySetValue(map);
+        entryKeySet(map);
+        iterator(map);
+        lambda(map);
+    }
+
+    /**
+     * 获取keySet
+     *
+     * @param map
+     */
+    public void keySetKey(HashMap<Integer, Object> map) {
+        System.out.println(" 获取keySet");
+        for (Integer key : map.keySet()) {
+            System.out.println(key + " : " + map.get(key));
+        }
+    }
+
+    /**
+     * 获取values
+     *
+     * @param map
+     */
+    public void keySetValue(HashMap map) {
+        System.out.println(" 获取values");
+        for (Object value : map.values()) {
+            System.out.println(value);
+        }
+    }
+
+    /**
+     * entrySet 获取key and value
+     *
+     * @param map
+     */
+    public void entryKeySet(HashMap<Integer, Object> map) {
+        System.out.println(" 获取entrySet");
+        for (Map.Entry<Integer, Object> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+
+    /**
+     * Iterator entrySet 获取key and value
+     *
+     * @param map
+     */
+    public void iterator(HashMap<Integer, Object> map) {
+        System.out.println(" 获取Iterator entrySet");
+        Iterator<Map.Entry<Integer, Object>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Object> entry = iterator.next();
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+
+    /**
+     * Lambda 获取key and value
+     *
+     * @param map
+     */
+    public void lambda(HashMap<Integer, Object> map) {
+        System.out.println(" 获取Lambda");
+        map.forEach((key, value) -> {
+            System.out.println(key + " : " + value);
+        });
+    }
 
     public void UrlDemo() throws IOException {
         // 建立URL连接的基本操作
@@ -109,26 +202,26 @@ public class HttpClientDemo {
         }
     }
 
-    public void trustManager() throws Exception {
-        // 创建SSLContext对象，并使用我们指定的信任管理器初始化
-        TrustManager[] tm = {new MyX509TrustManager()};
-        SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-        sslContext.init(null, tm, new java.security.SecureRandom());
-        // 从上述SSLContext对象中得到SSLSocketFactory对象
-        SSLSocketFactory ssf = sslContext.getSocketFactory();
-        // 创建URL对象
-        URL myURL = new URL("https://ebanks.gdb.com.cn/sperbank/perbankLogin.jsp");
-        // 创建HttpsURLConnection对象，并设置其SSLSocketFactory对象
-        HttpsURLConnection httpsConn = (HttpsURLConnection) myURL.openConnection();
-        httpsConn.setSSLSocketFactory(ssf);
-        // 取得该连接的输入流，以读取响应内容
-        InputStreamReader insr = new InputStreamReader(httpsConn.getInputStream());
-        // 读取服务器的响应内容并显示
-        int respInt = insr.read();
-        while (respInt != -1) {
-            System.out.print((char) respInt);
-            respInt = insr.read();
-        }
-    }
+//    public void trustManager() throws Exception {
+//        // 创建SSLContext对象，并使用我们指定的信任管理器初始化
+//        TrustManager[] tm = {new MyX509TrustManager()};
+//        SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+//        sslContext.init(null, tm, new java.security.SecureRandom());
+//        // 从上述SSLContext对象中得到SSLSocketFactory对象
+//        SSLSocketFactory ssf = sslContext.getSocketFactory();
+//        // 创建URL对象
+//        URL myURL = new URL("https://ebanks.gdb.com.cn/sperbank/perbankLogin.jsp");
+//        // 创建HttpsURLConnection对象，并设置其SSLSocketFactory对象
+//        HttpsURLConnection httpsConn = (HttpsURLConnection) myURL.openConnection();
+//        httpsConn.setSSLSocketFactory(ssf);
+//        // 取得该连接的输入流，以读取响应内容
+//        InputStreamReader insr = new InputStreamReader(httpsConn.getInputStream());
+//        // 读取服务器的响应内容并显示
+//        int respInt = insr.read();
+//        while (respInt != -1) {
+//            System.out.print((char) respInt);
+//            respInt = insr.read();
+//        }
+//    }
 
 }

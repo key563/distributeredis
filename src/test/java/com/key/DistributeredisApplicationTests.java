@@ -1,7 +1,6 @@
 package com.key;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +21,12 @@ public class DistributeredisApplicationTests {
 //            new RedisUtils().setObject("test201"+i,"q12312sss32");
 //        }
 
-        DDs s = new DDs();
-        s.setName("zhangsan");
-        s.setNumber(1);
-
-        String body = new ObjectMapper().writeValueAsString(s);
-        System.out.println(body);
+//        DDs s = new DDs();
+//        s.setName("zhangsan");
+//        s.setNumber(1);
+//
+//        String body = new ObjectMapper().writeValueAsString(s);
+//        System.out.println(body);
     }
 
 
