@@ -7,108 +7,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * HttpClient 请求调用demo
  */
 public class HttpClientDemo {
-    public static void main(String[] args) {
-        int nn = 16;
-        int MAXIMUM_CAPACITY = 1 << 30;
-        int n = 16 - 1;
-        System.out.println(n);
-        n |= n >>> 1;
-        System.out.println(n);
-        n |= n >>> 2;
-        System.out.println(n);
-        n |= n >>> 4;
-        System.out.println(n);
-        n |= n >>> 8;
-        System.out.println(n);
-        n |= n >>> 16;
-        System.out.println(n);
-        int m = (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
-        System.out.println(m);
-        HttpClientDemo test = new HttpClientDemo();
-//        test.hashMapTest();
-    }
-
-    public void hashMapTest() {
-        HashMap<Integer, Object> map = new HashMap<>(18);
-        for (int i = 100; i < 117; i++) {
-            map.put(i, "test_" + i);
-        }
-        System.out.println(map);
-        keySetKey(map);
-        keySetValue(map);
-        entryKeySet(map);
-        iterator(map);
-        lambda(map);
-    }
-
-    /**
-     * 获取keySet
-     *
-     * @param map
-     */
-    public void keySetKey(HashMap<Integer, Object> map) {
-        System.out.println(" 获取keySet");
-        for (Integer key : map.keySet()) {
-            System.out.println(key + " : " + map.get(key));
-        }
-    }
-
-    /**
-     * 获取values
-     *
-     * @param map
-     */
-    public void keySetValue(HashMap map) {
-        System.out.println(" 获取values");
-        for (Object value : map.values()) {
-            System.out.println(value);
-        }
-    }
-
-    /**
-     * entrySet 获取key and value
-     *
-     * @param map
-     */
-    public void entryKeySet(HashMap<Integer, Object> map) {
-        System.out.println(" 获取entrySet");
-        for (Map.Entry<Integer, Object> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-    }
-
-    /**
-     * Iterator entrySet 获取key and value
-     *
-     * @param map
-     */
-    public void iterator(HashMap<Integer, Object> map) {
-        System.out.println(" 获取Iterator entrySet");
-        Iterator<Map.Entry<Integer, Object>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, Object> entry = iterator.next();
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-    }
-
-    /**
-     * Lambda 获取key and value
-     *
-     * @param map
-     */
-    public void lambda(HashMap<Integer, Object> map) {
-        System.out.println(" 获取Lambda");
-        map.forEach((key, value) -> {
-            System.out.println(key + " : " + value);
-        });
-    }
 
     public void UrlDemo() throws IOException {
         // 建立URL连接的基本操作
@@ -172,7 +75,8 @@ public class HttpClientDemo {
         }
 
         //
-
+        httpClient.connectTimeout(3000);
+        httpClient.readTimeout(3000);
 
         //发送get请求获取数据
         try {

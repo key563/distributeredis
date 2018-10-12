@@ -5,13 +5,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.key.modules.sys.model.User;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -123,6 +132,41 @@ public class HttpEntityDemo {
         File uploadFile = new File("");
         builder.addPart("file2", new FileBody(uploadFile, ContentType.create("image/jpeg"), uploadFile.getName()));
         HttpEntity entity = builder.build();
+    }
+
+    /**
+     * 其他参数配置
+     * 1. 设置BasicAuth认证
+     * 2. 设置连接超时与数据传输超时时间
+     * 3.
+     */
+    public void otherParamSet() throws IOException {
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        // 设置BasicAuth认证
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        // 创建scope，并设置范围
+        AuthScope scope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+        // 创建credential，设置用户名和密码
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("username", "password");
+        // Inject the credentials
+        provider.setCredentials(scope, credentials);
+        // 设置provider
+        httpClientBuilder.setDefaultCredentialsProvider(provider);
+        // 创建默认的httpClient实例
+        CloseableHttpClient httpclient = httpClientBuilder.build();
+        // 创建httpPost
+        HttpPost httppost = new HttpPost("url");
+        // 设置请求和传输超时时间（3秒）
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
+        httppost.setConfig(requestConfig);
+
+        StringEntity stringEntity = new StringEntity("content", "UTF-8");
+        httppost.setEntity(stringEntity);
+        // 设置请求参数类型
+        httppost.setHeader("Content-Type", "text/xml;charset:utf-8");
+        CloseableHttpResponse response = httpclient.execute(httppost);
+
+
     }
 
     /**
