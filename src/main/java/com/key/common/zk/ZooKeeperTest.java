@@ -38,7 +38,7 @@ public class ZooKeeperTest {
     public void zkOperations() throws KeeperException, InterruptedException {
         //创建一个节点
         System.out.println("创建javanode节点");
-        zk.create("/javanode2", "sss".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        zk.create("/javanode2", "sss".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         String data = new String(zk.getData("/javanode2", false, null));
         System.out.println(data);
     }
