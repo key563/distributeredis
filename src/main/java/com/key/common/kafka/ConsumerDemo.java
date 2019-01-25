@@ -3,6 +3,9 @@ package com.key.common.kafka;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,7 +20,7 @@ public class ConsumerDemo {
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.204.130:9092");
         // 指定consumer group
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
-        // 将下一次消费的位置offset自动commit到服务器
+        // 将下一次消费的位置offset自动commit到服务器，短时间消费大量数据等特殊场景时会设置为手动（false）
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
         // 指定key和value反序列化方式
@@ -67,6 +70,7 @@ public class ConsumerDemo {
                 if (buffer.size() >= KafkaConstants.MIN_BATCH_SIZE) {
                     // 进行持久化到DB操作
                     // insertIntoDb(buffer);
+                    saveToFile(buffer);
                     //手动提交offset
                     consumer.commitSync();
                     buffer.clear();
@@ -75,6 +79,14 @@ public class ConsumerDemo {
         } catch (Exception e) {
             consumer.close();
         }
+    }
+
+    public void saveToFile(List<ConsumerRecord<String, String>> buffer) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("./log/kafka/consumer.txt",true));
+        for(ConsumerRecord<String, String> record : buffer){
+            bw.write(record.value()+"\n");
+        }
+        bw.close();
     }
 
     /**
@@ -86,6 +98,7 @@ public class ConsumerDemo {
         try {
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(KafkaConstants.CONSUMER_TIMEOUT);
+                System.out.println("开始消费数据:");
                 for (ConsumerRecord<String, String> record : records)
                     System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
             }
@@ -102,10 +115,10 @@ public class ConsumerDemo {
         // 新增consumer对象，并设置参数
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerDemo.properties);
         // 订阅topic列表
-        consumer.subscribe(Arrays.asList(KafkaConstants.TOPIC_TEST));
+        consumer.subscribe(Arrays.asList(KafkaConstants.TOPIC_TEST2));
         // 消费topic队列数据
-        consumerDemo.autoCommit(consumer);
-//        consumerDemo.manualCommit(consumer);
+//        consumerDemo.autoCommit(consumer);
+        consumerDemo.manualCommit(consumer);
 //        consumerDemo.manualCommitControlOffSet(consumer);
     }
 }

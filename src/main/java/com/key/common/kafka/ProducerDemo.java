@@ -14,11 +14,15 @@ import java.util.*;
 
 public class ProducerDemo {
     private Properties properties = new Properties();
+    private Producer<String, String> producer;
 
     /**
-     * 配置连接参数
+     * 初始化连接参数
      */
     private void configure() {
+        if (properties == null) {
+            properties = new Properties();
+        }
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.204.130:9092");
         properties.put(ProducerConfig.ACKS_CONFIG, "all");
         properties.put(ProducerConfig.RETRIES_CONFIG, 0);
@@ -29,14 +33,15 @@ public class ProducerDemo {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
 //        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+
+        // 新建生产者对象，并设置连接参数
+        producer = new KafkaProducer<String, String>(properties);
     }
 
     /**
      * 关闭连接
-     *
-     * @param producer
      */
-    private void close(Producer<String, String> producer) {
+    private void close() {
         try {
             if (producer != null) {
                 producer.close();
@@ -97,8 +102,6 @@ public class ProducerDemo {
     public static void main(String[] args) {
         ProducerDemo producerDemo = new ProducerDemo();
         producerDemo.configure();
-        // 新建生产者对象，并设置连接参数
-        Producer<String, String> producer = new KafkaProducer<>(producerDemo.properties);
         try {
             // 模拟生成数据，并序列化需要发送的数据，序列化的方式与参数指定的value.serializable对应
             // 这里因参数指定value.serializable为ByteArraySerializer方式，因此需要将数据序列化为byte[]数组
@@ -107,11 +110,11 @@ public class ProducerDemo {
             byte[] sendData = producerDemo.serialize(mapData);
             // 发送数据，通过ProducerRecord封装数据
             // ProducerRecord的构造方法必要参数为topic,value，还可以指定partition,timestamp,headers等
-            producer.send(new ProducerRecord(KafkaConstants.TOPIC_TEST, null, sendData));
+            producerDemo.producer.send(new ProducerRecord(KafkaConstants.TOPIC_TEST, null, sendData));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            producerDemo.close(producer);
+            producerDemo.close();
         }
 
     }
