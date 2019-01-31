@@ -1,6 +1,8 @@
 package com.key.modules.redis;
 
 import com.key.common.redis.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,9 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping(value = "/demo")
 public class DDController {
+
+    private static Logger logger = LoggerFactory.getLogger(DDController.class);
+    private static Logger logger_info = LoggerFactory.getLogger("custom_test");
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -31,6 +36,11 @@ public class DDController {
     @RequestMapping(value = "/annotationTest")
     public String annotationTest(String name) {
         System.out.println(name);
+        logger.info(name);
+        logger.debug(name);
+        logger.error(name);
+        logger_info.error("自定义日志输出：异常-" + name);
+        logger_info.info("自定义日志输出：正常--" + name);
         return "";
     }
 

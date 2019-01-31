@@ -1,15 +1,14 @@
 package com.key.common.kafka;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.util.*;
 
 public class ProducerDemo {
@@ -59,7 +58,8 @@ public class ProducerDemo {
      */
     public byte[] serialize(Map<String, Object> data) {
         try {
-            return JSON.toJSONBytes(data, new SerializerFeature[0]);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsBytes(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +74,8 @@ public class ProducerDemo {
      */
     public String serializeToString(Map<String, Object> data) {
         try {
-            return JSON.toJSONString(data, new SerializerFeature[0]);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,14 +87,15 @@ public class ProducerDemo {
      *
      * @return
      */
-    public Map<String, Object> collectData() {
+    public Map<String, Object> collectData() throws IOException {
         Map<String, Object> result = new HashMap<>();
         for (int i = 0; i < 100; i++) {
             ProducerData producerData = new ProducerData();
             producerData.setAge(new Random().nextInt(50));
             producerData.setId(UUID.randomUUID().toString());
             producerData.setAddress("data_" + i);
-            result.put(producerData.getId(), JSONObject.toJSON(producerData));
+            ObjectMapper mapper = new ObjectMapper();
+            result.put(producerData.getId(), mapper.writeValueAsString(producerData));
         }
         System.out.println(result);
         return result;

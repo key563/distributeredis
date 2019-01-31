@@ -29,6 +29,7 @@ public class ConsumerDemo {
     }
 
     /**
+     *
      * 手动提交offset，并指定的partition的最新offset值
      * 需要将enable.auto.commit 设置为 false
      *
